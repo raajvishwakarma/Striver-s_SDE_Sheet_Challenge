@@ -1,0 +1,61 @@
+long long merge(long long *arr, int s, int e){
+   int mid = s + (e-s)/2;
+   
+   int len1 = mid - s + 1;
+   int len2 = e - mid;
+   
+   int *first = new int[len1];
+   int *second = new int[len2];
+   
+   // copy
+   int mainIndex = s;
+   for (int i=0; i<len1; i++){
+      first[i] = arr[mainIndex+i];
+   }
+   mainIndex = mid + 1;
+   for (int i=0; i<len2; i++){
+      second[i] = arr[mainIndex+i];
+   }
+   
+   long long ind1 = 0;
+   long long ind2 = 0;
+   mainIndex = s;
+   long long inv = 0;
+   while(ind1 < len1 && ind2 < len2){
+      if(first[ind1] < second[ind2] ){
+         arr[mainIndex++] = first[ind1++];
+      }
+      else{
+         arr[mainIndex++] = second[ind2++];
+         inv += len1 - ind1;
+      }
+   }
+   while(ind1 < len1){
+      arr[mainIndex++] = first[ind1++];
+   }
+   while(ind2 < len2){
+      arr[mainIndex++] = second[ind2++];
+   }
+   return inv;
+}
+
+long long mergesort(long long *arr, int s, int e){
+   long long inv = 0;
+   if(s >= e){
+      return inv;
+   }
+   
+   int mid = s +(e-s)/2;
+   
+   inv +=  mergesort(arr, s, mid);
+   inv +=  mergesort(arr, mid+1, e);
+   
+   inv += merge(arr, s, e);
+
+   return inv;
+}
+
+long long getInversions(long long *arr, int n){
+   
+    return mergesort(arr, 0, n-1);
+}
